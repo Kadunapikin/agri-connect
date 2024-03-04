@@ -2,10 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+const productRoutes = require('./routes/products');// Import the product routes
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+// Use the productRoutes for any requests to /api/products
+app.use('/api/products', productRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('AgriConnect API is running...');
