@@ -1,13 +1,11 @@
 import './App.css'
+import Marketplace from './pages/Marketplace'
 
 function App() {
 
   return (
-    <div>
-      <h1 className="text-3xl bg-red-600 font-bold underline">
-        Hello world!
-      </h1>
-
+    <div className='App'>
+      <Marketplace />
     </div>
   )
 }
