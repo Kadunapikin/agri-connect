@@ -73,12 +73,13 @@ agri-connect/
 │   ├── .env                # Environment variables
 │   └── package.json        # NPM package configuration
 │
-└── backend/                # Backend application (Express.js + MongoDB)
-    ├── models/             # Mongoose models for MongoDB documents
-    ├── routes/             # API routes for handling requests
-    ├── controllers/        # Controllers to process data logic
-    ├── middleware/         # Middleware for request processing
-    ├── config/             # Configuration files (e.g., database connection)
-    ├── utils/              # Utility functions and helpers
-    ├── app.js              # Main application file to setup middleware and routes
-    └── package.json        # NPM package configuration
+├── agriconnect-backend/
+        ├── src/
+        │   ├── models/
+        │   │   └── product.js          # Your Mongoose model for a product
+        │   ├── routes/
+        │   │   └── products.js         # Your Express routes for products
+        │   └── server.js               # Your main server file
+        ├── package.json
+        ├── .env                        # Environment variables including your MongoDB URI
+        └── ...

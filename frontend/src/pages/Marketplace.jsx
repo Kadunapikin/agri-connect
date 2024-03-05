@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 
-// Sample product data
-const sampleProducts = [
-  { id: 1, name: 'Apples', description: 'Fresh apples from the farm', price: 2.99 },
-  { id: 2, name: 'Oranges', description: 'Juicy oranges', price: 3.49 },
-  // Add more products as needed
-];
-
 const Marketplace = () => {
-  const [products] = useState(sampleProducts);
+  const [products, setProducts] = useState([]);
+
+  // Function to fetch products from backend
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/products');
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []); // The empty array ensures this effect runs only once after the initial render
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
       <div className="grid grid-cols-3 gap-4">
         {products.map(product => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product._id} product={product} />
         ))}
       </div>
     </div>
@@ -24,3 +32,5 @@ const Marketplace = () => {
 };
 
 export default Marketplace;
+
+
