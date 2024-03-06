@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
+import ProductForm from '../components/ProductForm';
 
 const Marketplace = () => {
   const [products, setProducts] = useState([]);
@@ -19,17 +20,18 @@ const Marketplace = () => {
     fetchProducts();
   }, []); // The empty array ensures this effect runs only once after the initial render
 
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
-      <div className="grid grid-cols-3 gap-4">
-        {products.map(product => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-      </div>
-    </div>
-  );
-};
+    return (
+        <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
+        <ProductForm onNewProduct={fetchProducts} />
+        <div className="grid grid-cols-3 gap-4">
+            {products.map(product => (
+            <ProductCard key={product._id} product={product} />
+            ))}
+        </div>
+        </div>
+    );
+  };
 
 export default Marketplace;
 
