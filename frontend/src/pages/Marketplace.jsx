@@ -5,6 +5,7 @@ import ProductForm from '../components/ProductForm';
 const Marketplace = () => {
   const [products, setProducts] = useState([]);
   const [showForm, setShowForm] = useState(false); // State to control the visibility of ProductForm
+  const [editingProduct, setEditingProduct] = useState(null);
 
   // Function to fetch products from backend
   const fetchProducts = async () => {
@@ -18,13 +19,19 @@ const Marketplace = () => {
   };
 
   // Function to delete a product
-const deleteProduct = async (id) => {
+    const deleteProduct = async (id) => {
     await fetch(`http://localhost:5000/api/products/${id}`, {
       method: 'DELETE',
     });
     // Refresh the products after deletion
     fetchProducts();
   };
+
+  // Function to initiate editing a product
+    const startEditing = (product) => {
+        setEditingProduct(product);
+        setShowForm(true);
+    };
 
   useEffect(() => {
     fetchProducts();
@@ -40,10 +47,21 @@ const deleteProduct = async (id) => {
         {showForm ? 'Cancel' : 'Add Product'} 
       </button>
       {/* Conditional rendering based on showForm state */}
-      {showForm && <ProductForm onNewProduct={() => { fetchProducts(); setShowForm(false); }} />}
+      {/* {showForm && <ProductForm onNewProduct={() => { fetchProducts(); setShowForm(false); }} />} */} 
+      {showForm && (
+        <ProductForm
+            onNewProduct={fetchProducts}
+            productToEdit={editingProduct}
+            onProductEdited={() => {
+            fetchProducts();
+            setShowForm(false);
+            setEditingProduct(null);
+            }}
+        />
+        )}
       <div className="grid grid-cols-3 gap-4">
         {products.map(product => (
-          <ProductCard key={product._id} product={product} onDelete={deleteProduct} />
+          <ProductCard key={product._id} product={product} onDelete={deleteProduct} onEdit={startEditing} />
         ))}
       </div>
     </div>
