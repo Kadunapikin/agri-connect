@@ -27,6 +27,18 @@ router.post('/', async (req, res) => {
       res.status(400).json({ message: err.message });
     }
   });
+
+  // DELETE request to delete a product by id
+router.delete('/:id', async (req, res) => {
+    try {
+      const product = await Product.findByIdAndDelete(req.params.id);
+      if (!product) res.status(404).send("No item found");
+      res.status(200).send();
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+  
   
 // Add more routes as needed for creating, updating, and deleting products
 
