@@ -17,6 +17,15 @@ const Marketplace = () => {
     }
   };
 
+  // Function to delete a product
+const deleteProduct = async (id) => {
+    await fetch(`http://localhost:5000/api/products/${id}`, {
+      method: 'DELETE',
+    });
+    // Refresh the products after deletion
+    fetchProducts();
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []); // The empty array ensures this effect runs only once after the initial render
@@ -34,7 +43,7 @@ const Marketplace = () => {
       {showForm && <ProductForm onNewProduct={() => { fetchProducts(); setShowForm(false); }} />}
       <div className="grid grid-cols-3 gap-4">
         {products.map(product => (
-          <ProductCard key={product._id} product={product} />
+          <ProductCard key={product._id} product={product} onDelete={deleteProduct} />
         ))}
       </div>
     </div>
