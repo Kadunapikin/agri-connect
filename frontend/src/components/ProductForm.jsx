@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
 
-const ProductForm = ({ onNewProduct }) => {
+const ProductForm = ({ onNewProduct, productToEdit, onProductEdited }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
 
+  useEffect(() => {
+    if (productToEdit) {
+      setName(productToEdit.name);
+      setDescription(productToEdit.description);
+      setPrice(productToEdit.price);
+    }
+  }, [productToEdit]);
+
+  //New hnadleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
     const product = { name, description, price: parseFloat(price) };
 
-    // Post request to backend to create a new product
-    const response = await fetch('http://localhost:5000/api/products', {
-      method: 'POST',
+    const url = productToEdit ? `http://localhost:5000/api/products/${productToEdit._id}` : 'http://localhost:5000/api/products';
+    const method = productToEdit ? 'PATCH' : 'POST';
+
+    const response = await fetch(url, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -19,14 +30,41 @@ const ProductForm = ({ onNewProduct }) => {
     });
 
     if (response.ok) {
-      // Clear the form
       setName('');
       setDescription('');
       setPrice('');
-      // Callback to notify parent component to refresh the product list
-      onNewProduct();
+      if (productToEdit && onProductEdited) {
+        onProductEdited();
+      } else {
+        onNewProduct();
+      }
     }
   };
+
+  //Old handleSubmit
+  
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const product = { name, description, price: parseFloat(price) };
+
+//     // Post request to backend to create a new product
+//     const response = await fetch('http://localhost:5000/api/products', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(product),
+//     });
+
+//     if (response.ok) {
+//       // Clear the form
+//       setName('');
+//       setDescription('');
+//       setPrice('');
+//       // Callback to notify parent component to refresh the product list
+//       onNewProduct();
+//     }
+//   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 mb-4">
