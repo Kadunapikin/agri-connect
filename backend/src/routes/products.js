@@ -38,6 +38,18 @@ router.delete('/:id', async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   });
+
+  // PATCH request to update a product by id
+router.patch('/:id', async (req, res) => {
+    try {
+      const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!product) res.status(404).send("No item found");
+      res.json(product);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+  
   
   
 // Add more routes as needed for creating, updating, and deleting products
