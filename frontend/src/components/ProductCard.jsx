@@ -15,6 +15,12 @@ const ProductCard = ({ product, onDelete }) => {
       >
         Delete
       </button>
+      <button
+        onClick={() => onEdit(product)}
+        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 mt-4 rounded"
+      >
+        Edit
+      </button>
     </div>
   );
 };
