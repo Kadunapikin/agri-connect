@@ -3,9 +3,10 @@ import ProductCard from '../components/ProductCard';
 import ProductForm from '../components/ProductForm';
 
 const Marketplace = () => {
-  const [products, setProducts] = useState([]);
-  const [showForm, setShowForm] = useState(false); // Controls visibility of ProductForm
+  const [products, setProducts] = useState([]); // Stores the full list of products
+  const [showForm, setShowForm] = useState(false); // Controls the visibility of ProductForm
   const [editingProduct, setEditingProduct] = useState(null); // Holds the product to edit
+  const [searchTerm, setSearchTerm] = useState(''); // Stores the current search term
 
   // Fetch products from backend
   const fetchProducts = async () => {
@@ -14,13 +15,13 @@ const Marketplace = () => {
     setProducts(data);
   };
 
-  // Delete a product
+  // Function to delete a product
   const deleteProduct = async (id) => {
     await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
     fetchProducts(); // Refresh list after deletion
   };
 
-  // Initialize editing a product
+  // Function to initiate editing a product
   const startEditing = (product) => {
     setEditingProduct(product); // Set product to edit
     setShowForm(true); // Show the ProductForm
@@ -30,13 +31,27 @@ const Marketplace = () => {
     fetchProducts();
   }, []);
 
+  // Filter products based on search term
+  const filteredProducts = searchTerm
+    ? products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    : products;
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Marketplace</h1>
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="mb-4 px-3 py-2 border rounded shadow"
+      />
       <button
         onClick={() => {
-          setEditingProduct(null); // Ensure no product is set for editing when adding a new one
-          setShowForm(!showForm);
+          setEditingProduct(null); // Reset product to edit
+          setShowForm(!showForm); // Toggle form visibility
         }}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
       >
@@ -49,12 +64,12 @@ const Marketplace = () => {
           onProductEdited={() => {
             fetchProducts();
             setShowForm(false);
-            setEditingProduct(null); // Clear editing state
+            setEditingProduct(null); // Clear editing state after product is edited
           }}
         />
       )}
       <div className="grid grid-cols-3 gap-4">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard key={product._id} product={product} onDelete={deleteProduct} onEdit={startEditing} />
         ))}
       </div>
